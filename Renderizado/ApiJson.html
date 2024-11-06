@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Servicio que recibe y devuelve JSON</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSkt++AdR6L/8AN7Owxmn0iA5Hdj/t9g5eL5L/0z8Na" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="card shadow p-4">
+      <h1 class="text-primary text-center mb-4">Servicio que recibe y devuelve JSON</h1>
+      <h4 class="text-secondary text-center">Recupera datos de un usuario de: <a href="https://randomuser.me/api/" target="_blank">randomuser</a></h4>
+      
+      <div class="text-center mt-4">
+        <button class="btn btn-primary btn-lg" onclick="envia()">Recupera Usuario</button>
+        <a href="index.html" class="btn btn-primary mt-3">Regresar</a>
+      </div>
+      
+      <div id="resultado" class="mt-4 alert alert-info d-none"></div>
+    </div>
+  </div>
+
+  <script>
+    async function envia() {
+      try {
+        const respuesta = await fetch('srv/json.php');
+        console.log("Respuesta de la solicitud:", respuesta);
+
+        if (!respuesta.ok) {
+          throw new Error('Error en la solicitud');
+        }
+
+        const jsonResponse = await respuesta.json();
+        console.log("JSON recibido:", jsonResponse);
+
+        const resultadoDiv = document.getElementById('resultado');
+        if (jsonResponse.error) {
+          resultadoDiv.classList.replace('alert-info', 'alert-danger');
+          resultadoDiv.classList.remove('d-none');
+          resultadoDiv.textContent = "Error: " + jsonResponse.error;
+        } else {
+          const usuarioInfo = `
+            <strong>Nombre:</strong> ${jsonResponse.nombre_completo} <br>
+            <strong>Género:</strong> ${jsonResponse.genero} <br>
+            <strong>Usuario:</strong> ${jsonResponse.usuario} <br>
+            <strong>Correo:</strong> ${jsonResponse.correo} <br>
+            <strong>Dirección:</strong> ${jsonResponse.direccion.street}, ${jsonResponse.direccion.city}, ${jsonResponse.direccion.state}, ${jsonResponse.direccion.postcode} <br>
+            <strong>Teléfono:</strong> ${jsonResponse.telefono} <br>
+            <strong>Celular:</strong> ${jsonResponse.celular} <br>
+          `;
+          resultadoDiv.classList.replace('alert-danger', 'alert-info');
+          resultadoDiv.classList.remove('d-none');
+          resultadoDiv.innerHTML = usuarioInfo;
+        }
+      } catch (error) {
+        console.error("Error en la función envia:", error);
+        alert("Ocurrió un error: " + error.message);
+      }
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ppYNBka6aZbF4XPIgL0ZVj0B9MGYmgS3Axr43W3tx2Fx45A8Rw3HS5pdp2g0khcB" crossorigin="anonymous"></script>
+</body>
+</html>

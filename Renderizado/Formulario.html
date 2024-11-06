@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muestra datos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body onload="descargaDatos()" class="container">
+
+    <h1 class="my-4">Muestra datos</h1>
+    
+
+    <div class="form-group">
+        <label>Nombre</label>
+        <output name="nombre" class="form-control"></output>
+    </div>
+
+    <div class="form-group">
+        <label>¿Cuál es tu libro favorito?</label>
+        <input name="libroFavorito" type="text" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label>¿Qué tipo de deporte prefieres?</label>
+        <select name="deportePreferido" class="form-control">
+            <option value="">Sin selección</option>
+            <option value="futbol">Fútbol</option>
+            <option value="baloncesto">Baloncesto</option>
+            <option value="tenis">Tenis</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>¿Cuál es tu animal favorito?</label>
+        <select name="animalFavorito" class="form-control">
+            <option value="perro">Perro</option>
+            <option value="gato">Gato</option>
+            <option value="loro">Loro</option>
+            <option value="pez">Pez</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>¿Cuántos años tienes?</label>
+        <input data-name="edad" type="number" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label>¿Cuál es tu número de la suerte?</label>
+        <output id="numero" class="form-control"></output>
+    </div>
+
+    <div class="form-group form-check">
+        <input id="gustaCocinar" type="checkbox" class="form-check-input">
+        <label class="form-check-label">¿Te gusta cocinar?</label>
+    </div>
+
+    <div class="form-group">
+        <label>¿Te consideras gracioso?</label>
+        <output id="gracioso" class="form-control"></output>
+    </div>
+
+    <div class="form-group">
+        <label>¿Tienes mascotas?</label>
+        <select name="tieneMascota" class="form-control">
+            <option value="">Sin selección</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>¿Dónde vives?</label>
+        <pre id="direccion" class="border p-2"></pre>
+    </div>
+
+    <div class="form-group">
+        <label>¿Cuál es tu serie favorita?</label>
+        <span id="serieFavorita" class="form-control"></span>
+    </div>
+
+    <div class="form-group">
+        <label>¿Cuándo es tu cumpleaños?</label>
+        <input id="nacimiento" type="date" class="form-control">
+    </div>
+
+    <figure class="figure">
+        <img id="imagen1" alt="Imagen 1" class="figure-img img-fluid rounded">
+        <figcaption class="figure-caption">Utn</figcaption>
+    </figure>
+
+    <figure class="figure">
+        <img id="imagen2" alt="Imagen 2" class="figure-img img-fluid rounded">
+        <figcaption class="figure-caption">Desarrollo de Software</figcaption>
+    </figure>
+
+    <fieldset class="form-group">
+        <legend>¿Qué pasatiempos tienes?</legend>
+        <div class="form-check">
+            <input type="checkbox" name="pasatiempos[]" value="pintura" class="form-check-input">
+            <label class="form-check-label">Pintura</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" name="pasatiempos[]" value="correr" class="form-check-input">
+            <label class="form-check-label">Correr</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" data-name="pasatiempos[]" value="fotografia" class="form-check-input">
+            <label class="form-check-label">Fotografía</label>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <legend>¿Eres nocturno?</legend>
+        <div class="form-check">
+            <input type="radio" name="nocturno" value="si" class="form-check-input">
+            <label class="form-check-label">Sí</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" name="nocturno" value="no" class="form-check-input">
+            <label class="form-check-label">No</label>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <label>Selecciona tus colores favoritos</label>
+        <select name="colores[]" multiple size="3" class="form-control">
+            <option value="rojo">Rojo</option>
+            <option value="azul">Azul</option>
+            <option value="verde">Verde</option>
+        </select>
+    </div>
+
+    <script type="module">
+        import { exportaAHtml } from "./lib/js/exportaAHtml.js";
+        import { consumeJson } from "./lib/js/consumeJson.js";
+        import { muestraObjeto } from "./lib/js/muestraObjeto.js";
+        import { muestraError } from "./lib/js/muestraError.js";
+
+        async function descargaDatos() {
+            try {
+                const respuesta = await consumeJson("srv/datos.php");
+                muestraObjeto(document, respuesta.body);
+            } catch (error) {
+                muestraError(error);
+            }
+        }
+        exportaAHtml(descargaDatos);
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <a href="index.html" class="btn btn-primary mt-3">Regresar</a>
+</body>
+
+</html>
